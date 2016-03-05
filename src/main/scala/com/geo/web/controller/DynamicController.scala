@@ -18,7 +18,7 @@ import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.servlet.DispatcherServlet
 
 trait DynamicManager {
-  def remove(ctx: DynamicWebApplicationContext)
+  def remove(entry: String)
 }
 
 /**
@@ -57,7 +57,7 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
       }
       val ctx = getDynamicContext(entryClsName)
       Thread.currentThread().setContextClassLoader(ctx.getClassLoader)
-      ctx.getClassLoader.loadClass(entryClsName)
+      ctx.reloadEntry()
       val servlet = getEntryServlet(entry, entryClsName, ctx)
       servlet.refresh()
       servlet.service(request, response)
@@ -90,34 +90,28 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
 
   private def getDynamicContext(clsName: String): DynamicWebApplicationContext = {
     def createDynamicContext(): DynamicWebApplicationContext = {
-      val ctx = new DynamicWebApplicationContext(this, appContext)
+      val ctx = new DynamicWebApplicationContext(clsName, this, appContext)
       ctx.register(ctx.getClassLoader.loadClass(config.getConfig("groovy").getString("basicConfig")))
       ctx
     }
-
-    var ctxOpt: Option[DynamicWebApplicationContext] = dynamicContextMapping.get(clsName)
-    if (ctxOpt.isDefined) {
-      ctxOpt = ctxOpt.get.detectDestroyIfNecessary()
+    this.synchronized {
+      var ctxOpt: Option[DynamicWebApplicationContext] = dynamicContextMapping.get(clsName)
+      if (ctxOpt.isDefined) {
+        ctxOpt = ctxOpt.get.detectDestroyIfNecessary()
+      }
+      if (ctxOpt.isEmpty) {
+        ctxOpt = Some(createDynamicContext())
+        dynamicContextMapping += (clsName -> ctxOpt.get)
+      }
+      ctxOpt.get
     }
-    if (ctxOpt.isEmpty) {
-      ctxOpt = Some(createDynamicContext())
-      dynamicContextMapping += (clsName -> ctxOpt.get)
-    }
-    ctxOpt.get
   }
 
-  override def remove(ctx: DynamicWebApplicationContext): Unit = {
-    def getEntry(): String = {
-      for ((entry, context) <- dynamicContextMapping) {
-        if (context == ctx) {
-          return entry
-        }
-      }
-      null
+  override def remove(entry: String): Unit = {
+    this.synchronized {
+      dynamicContextMapping.remove(entry)
+      servletMapping.remove(entry)
     }
-    val entry = getEntry()
-    dynamicContextMapping.remove(entry)
-    servletMapping.remove(entry)
   }
 }
 

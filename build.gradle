@@ -49,6 +49,7 @@ dependencies {
     compile "javax.servlet:jstl:1.2"
     compile 'org.apache.commons:commons-dbcp2:2.1.1'
     compile 'javax.transaction:jta:1.1'
+    compile 'mysql:mysql-connector-java:5.1.27'
 
     providedCompile "javax.servlet:javax.servlet-api:3.1.0"
 

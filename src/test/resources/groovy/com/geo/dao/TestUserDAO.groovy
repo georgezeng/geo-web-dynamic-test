@@ -21,7 +21,7 @@ class TestUserDAO implements InitializingBean {
     }
 
     def save(user) {
-        sessionFactory.getCurrentSession().save(user)
+        sessionFactory.getCurrentSession().saveOrUpdate(user)
     }
 
     void afterPropertiesSet() throws Exception {

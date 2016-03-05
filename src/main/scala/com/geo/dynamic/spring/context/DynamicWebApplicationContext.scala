@@ -8,7 +8,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 /**
   * Created by GeorgeZeng on 16/2/20.
   */
-class DynamicWebApplicationContext(dynamicManager: DynamicManager, parent: ApplicationContext) extends AnnotationConfigWebApplicationContext {
+class DynamicWebApplicationContext(entry: String, dynamicManager: DynamicManager, parent: ApplicationContext) extends AnnotationConfigWebApplicationContext {
   setParent(parent)
   setClassLoader(new DynamicSpringClassLoader(getClass.getClassLoader))
 
@@ -17,11 +17,14 @@ class DynamicWebApplicationContext(dynamicManager: DynamicManager, parent: Appli
     super.setClassLoader(classLoader)
   }
 
+  def reloadEntry(): Unit = {
+    getClassLoader.loadClass(entry)
+  }
 
   override def destroy(): Unit = {
     this.synchronized {
-      super.destroy()
-      dynamicManager.remove(this)
+//      super.destroy()
+      dynamicManager.remove(entry)
     }
   }
 

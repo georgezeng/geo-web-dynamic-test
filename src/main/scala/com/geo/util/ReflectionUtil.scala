@@ -14,7 +14,7 @@ object ReflectionUtil extends ReflectionUtils {
       return true
     } else if (types != null && arguments != null && types.length == arguments.length) {
       var count = 0
-      for (i <- 0 to types.length) {
+      for (i <- 0 until types.length) {
         if (arguments(i) == null || arguments(i) != null && types(i).isAssignableFrom(arguments(i).getClass)) {
           count += 1
         }

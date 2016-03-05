@@ -20,6 +20,7 @@ trait ResourceConfigModel {
     config
   }
 
+  @Bean
   def dataSource(config: Config): DataSource = {
     val ds = new BasicDataSource
     val dbConfig = config.getConfig("database")
