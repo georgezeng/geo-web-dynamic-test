@@ -9,8 +9,17 @@ import org.springframework.context.annotation.Configuration
 class TestResourceConfig extends BasicResourceConfig {
 
     @Override
-    protected Class<?>[] defineAnnotatedClasses() {
+    protected Class<?>[] defineHibernateAnnotatedClasses() {
         return [com.geo.entity.TestUser.class]
+    }
+
+    @Override
+    protected Properties defineHibernateProperties() {
+        def props = new Properties()
+        props.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
+        props.setProperty("hibernate.show_sql", "true")
+        props.setProperty("hibernate.format_sql", "true")
+        props
     }
 
 }

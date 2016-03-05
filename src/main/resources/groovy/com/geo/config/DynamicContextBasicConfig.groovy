@@ -73,7 +73,7 @@ class DynamicAopSettingPostProcessor implements BeanFactoryPostProcessor {
             def proxyClass = AopConfigUtils.@APC_PRIORITY_LIST.find {
                 return it.name.contains("DynamicAopProxyCreator")
             }
-            if(proxyClass == null) {
+            if (proxyClass == null) {
                 AopConfigUtils.@APC_PRIORITY_LIST.add(DynamicAopProxyCreator.class)
             }
             BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory
@@ -94,17 +94,16 @@ abstract class BasicResourceConfig {
     @Bean
     def LocalSessionFactoryBean sessionFactory(DataSource ds) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean()
-        sessionFactory.setAnnotatedClasses(defineAnnotatedClasses())
+        sessionFactory.setAnnotatedClasses(defineHibernateAnnotatedClasses())
         sessionFactory.setDataSource(ds)
-        Properties props = new Properties()
-        props.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
-        props.setProperty("hibernate.show_sql", "true")
-        props.setProperty("hibernate.format_sql", "true")
+        Properties props = defineHibernateProperties()
         sessionFactory.setHibernateProperties(props)
         sessionFactory
     }
 
-    protected abstract Class<?>[] defineAnnotatedClasses()
+    protected abstract Class<?>[] defineHibernateAnnotatedClasses()
+
+    protected abstract Properties defineHibernateProperties()
 
     @Bean
     def PlatformTransactionManager transactionManager(SessionFactory sessionFactory) {
