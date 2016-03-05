@@ -40,10 +40,8 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
   @RequestMapping(path = Array("/refreshContexts"))
   @ResponseBody
   def refreshContexts(): String = {
-    this.synchronized {
-      for((clsName, ctx) <- dynamicContextMapping) {
-        ctx.detectDestroyIfNecessary(true)
-      }
+    for ((clsName, ctx) <- dynamicContextMapping) {
+      ctx.detectDestroyIfNecessary(true)
     }
     "Refresh all contexts success."
   }
@@ -57,13 +55,10 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
       if (entryClsName == null) {
         throw new ClassNotFoundException("Entry not found.")
       }
-      var servlet: DispatcherServlet = null
-      this.synchronized {
-        val ctx = getDynamicContext(entryClsName)
-        Thread.currentThread().setContextClassLoader(ctx.getClassLoader)
-        ctx.getClassLoader.loadClass(entryClsName)
-        servlet = getEntryServlet(entry, entryClsName, ctx)
-      }
+      val ctx = getDynamicContext(entryClsName)
+      Thread.currentThread().setContextClassLoader(ctx.getClassLoader)
+      ctx.getClassLoader.loadClass(entryClsName)
+      val servlet = getEntryServlet(entry, entryClsName, ctx)
       servlet.refresh()
       servlet.service(request, response)
     } catch {
@@ -120,11 +115,9 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
       }
       null
     }
-    this.synchronized {
-      val entry = getEntry()
-      dynamicContextMapping.remove(entry)
-      servletMapping.remove(entry)
-    }
+    val entry = getEntry()
+    dynamicContextMapping.remove(entry)
+    servletMapping.remove(entry)
   }
 }
 

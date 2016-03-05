@@ -1,7 +1,7 @@
 package com.geo.service
 
+import com.geo.config.WithConfig
 import com.geo.dao.TestUserDAO
-import com.geo.dynamic.spring.annotation.WithConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

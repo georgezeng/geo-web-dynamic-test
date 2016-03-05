@@ -1,13 +1,16 @@
-package com.geo.dynamic.spring.annotation;
+package com.geo.config
 
+/**
+ * Created by GeorgeZeng on 16/3/5.
+ */
 import java.lang.annotation.*;
 
 /**
  * Created by GeorgeZeng on 16/2/21.
  */
-@Target({ ElementType.TYPE })
+@Target([ElementType.TYPE ])
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface WithConfig {
+@interface WithConfig {
     Class<?>[] classes();
 }
