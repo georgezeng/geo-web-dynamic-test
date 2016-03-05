@@ -9,7 +9,7 @@
         </layout>
     </appender>
 
-    <logger name="com.geo" level="info"
+    <logger name="com.geo" level="debug"
             additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>

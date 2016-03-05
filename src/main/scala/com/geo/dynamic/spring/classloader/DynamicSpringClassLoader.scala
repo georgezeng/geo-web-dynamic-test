@@ -20,8 +20,8 @@ class DynamicSpringClassLoader(parent: ClassLoader) extends DynamicClassLoader(p
     super.setClassCacheEntry(cls)
   }
 
-  def detectDestroyIfNecessary(): Option[DynamicWebApplicationContext] = {
-    if (Environment.isDevOrTest()) {
+  def detectDestroyIfNecessary(force: Boolean = false): Option[DynamicWebApplicationContext] = {
+    if (Environment.isDevOrTest() || force) {
       classCache.synchronized {
         if (!classCache.isEmpty) {
           for ((clsName, cls) <- classCache) {

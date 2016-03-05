@@ -5,7 +5,6 @@ import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.servlet.{ServletConfig, ServletContext}
 
 import com.geo.dynamic.spring.ServletContextHolder
-import com.geo.dynamic.spring.classloader.DynamicSpringClassLoader
 import com.geo.dynamic.spring.context.DynamicWebApplicationContext
 import com.geo.dynamic.{DynamicClassLoader, DynamicEntryLoader}
 import com.typesafe.config.Config
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.{PathVariable, RequestMapping}
+import org.springframework.web.bind.annotation.{ResponseBody, PathVariable, RequestMapping}
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.servlet.DispatcherServlet
 
@@ -38,6 +37,17 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
   private val groovyResourceClsLoader = new DynamicClassLoader(getClass.getClassLoader)
   private val entryMappingLoader = new DynamicEntryLoader()
 
+  @RequestMapping(path = Array("/refreshContexts"))
+  @ResponseBody
+  def refreshContexts(): String = {
+    this.synchronized {
+      for((clsName, ctx) <- dynamicContextMapping) {
+        ctx.detectDestroyIfNecessary(true)
+      }
+    }
+    "Refresh all contexts success."
+  }
+
   @RequestMapping(path = Array("/{entry}/**"))
   def execute(@PathVariable entry: String, request: HttpServletRequest, response: HttpServletResponse): Unit = {
     val originalClsLoader = Thread.currentThread().getContextClassLoader
@@ -52,7 +62,7 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
         val ctx = getDynamicContext(entryClsName)
         Thread.currentThread().setContextClassLoader(ctx.getClassLoader)
         ctx.getClassLoader.loadClass(entryClsName)
-        servlet = getEntryServlet(entryClsName, ctx)
+        servlet = getEntryServlet(entry, entryClsName, ctx)
       }
       servlet.refresh()
       servlet.service(request, response)
@@ -68,43 +78,37 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
     entryMappingLoader.entryMapping(entryMappingCls).get(entry)
   }
 
-  private def getEntryServlet(entry: String, ctx: WebApplicationContext): DispatcherServlet = {
-    var servletOpt: Option[DispatcherServlet] = None
-    this.synchronized {
-      servletOpt = servletMapping.get(entry)
-      if (servletOpt.isEmpty) {
-        servletOpt = Some(createServlet(entry, ctx))
-        servletMapping += (entry -> servletOpt.get)
-      }
+  private def getEntryServlet(entry: String, entryClsName: String, ctx: WebApplicationContext): DispatcherServlet = {
+    def createServlet(): DispatcherServlet = {
+      val servlet = new DispatcherServlet(ctx)
+      servlet.init(new DynamicServletConfig(entry))
+      servlet
+    }
+
+    var servletOpt: Option[DispatcherServlet] = servletMapping.get(entryClsName)
+    if (servletOpt.isEmpty) {
+      servletOpt = Some(createServlet())
+      servletMapping += (entry -> servletOpt.get)
     }
     servletOpt.get
   }
 
-  private def createServlet(entry: String, ctx: WebApplicationContext): DispatcherServlet = {
-    val servlet = new DispatcherServlet(ctx)
-    servlet.init(new DynamicServletConfig(entry))
-    servlet
-  }
-
   private def getDynamicContext(clsName: String): DynamicWebApplicationContext = {
-    var ctxOpt: Option[DynamicWebApplicationContext] = None
-    this.synchronized {
-      ctxOpt = dynamicContextMapping.get(clsName)
-      if(ctxOpt.isDefined) {
-        ctxOpt = ctxOpt.get.getClassLoader.asInstanceOf[DynamicSpringClassLoader].detectDestroyIfNecessary()
-      }
-      if (ctxOpt.isEmpty) {
-        ctxOpt = Some(createDynamicContext())
-        dynamicContextMapping += (clsName -> ctxOpt.get)
-      }
+    def createDynamicContext(): DynamicWebApplicationContext = {
+      val ctx = new DynamicWebApplicationContext(this, appContext)
+      ctx.register(ctx.getClassLoader.loadClass(config.getConfig("groovy").getString("basicConfig")))
+      ctx
+    }
+
+    var ctxOpt: Option[DynamicWebApplicationContext] = dynamicContextMapping.get(clsName)
+    if (ctxOpt.isDefined) {
+      ctxOpt = ctxOpt.get.detectDestroyIfNecessary()
+    }
+    if (ctxOpt.isEmpty) {
+      ctxOpt = Some(createDynamicContext())
+      dynamicContextMapping += (clsName -> ctxOpt.get)
     }
     ctxOpt.get
-  }
-
-  private def createDynamicContext(): DynamicWebApplicationContext = {
-    val ctx = new DynamicWebApplicationContext(this, appContext)
-    ctx.register(ctx.getClassLoader.loadClass(config.getConfig("groovy").getString("basicConfig")))
-    ctx
   }
 
   override def remove(ctx: DynamicWebApplicationContext): Unit = {

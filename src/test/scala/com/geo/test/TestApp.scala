@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.{EnableWebMvc, Resource
 @EnableWebMvc
 class TestConfig extends WebMvcConfigurerAdapter with WebConfigModel with ResourceConfigModel {
 
-  override def addResourceHandlers( registry:ResourceHandlerRegistry):Unit = {
+  override def addResourceHandlers(registry: ResourceHandlerRegistry): Unit = {
     registry.addResourceHandler("/**")
       .addResourceLocations("/")
       .setCachePeriod(0)

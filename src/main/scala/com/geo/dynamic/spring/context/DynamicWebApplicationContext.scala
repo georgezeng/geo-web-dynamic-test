@@ -25,6 +25,10 @@ class DynamicWebApplicationContext(dynamicManager: DynamicManager, parent: Appli
     }
   }
 
+  def detectDestroyIfNecessary(force: Boolean = false): Option[DynamicWebApplicationContext] = {
+    getClassLoader.asInstanceOf[DynamicSpringClassLoader].detectDestroyIfNecessary(force)
+  }
+
   @volatile
   private var init = false
 

@@ -26,13 +26,16 @@ class TestUserDAO implements InitializingBean {
 
     void afterPropertiesSet() throws Exception {
         def session = sessionFactory.openStatelessSession()
-        session.createSQLQuery("""
+        try {
+            session.createSQLQuery("""
             CREATE TABLE IF NOT EXISTS `${TestUser.class.simpleName}`  (
               `id` bigint(20) NOT NULL AUTO_INCREMENT,
               `name` varchar(255) DEFAULT NULL,
               PRIMARY KEY (`id`),
             ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
         """).executeUpdate()
-        session.close()
+        } finally {
+            session.close()
+        }
     }
 }
