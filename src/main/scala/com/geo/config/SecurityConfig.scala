@@ -3,8 +3,10 @@ package com.geo.config
 import java.lang.reflect.Method
 
 import com.geo.dynamic.spring.security.DynamicSecurityMetadataSource
+import com.geo.enums.Environment
 import com.typesafe.config.Config
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.http.HttpMethod
 import org.springframework.security.access.expression.SecurityExpressionHandler
 import org.springframework.security.config.annotation.ObjectPostProcessor
@@ -20,10 +22,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
   * Created by GeorgeZeng on 16/3/6.
   */
 @EnableWebSecurity
+@ComponentScan(Array("com.geo.security"))
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  @Autowired
   private var config: Config = _
+
+  @Autowired
+  def setAppConfig(config: Config): Unit = {
+    this.config = config
+  }
 
   @Autowired
   def configureGlobal(auth: AuthenticationManagerBuilder): Unit = {
@@ -61,5 +68,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
       .formLogin()
       .and()
       .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout/**", HttpMethod.GET.name(), false))
+
+    if(Environment.current == Environment.Test) {
+      http.csrf().disable()
+    }
   }
 }

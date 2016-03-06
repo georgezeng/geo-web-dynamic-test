@@ -2,15 +2,21 @@ package com.geo.config
 
 import javax.sql.DataSource
 
+import com.geo.entity.User
 import com.geo.enums.Environment
-import com.typesafe.config.{ConfigFactory, Config}
+import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.commons.dbcp2.BasicDataSource
-import org.springframework.context.annotation.{Bean, Configuration}
+import org.hibernate.SessionFactory
+import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean
+import org.springframework.transaction.PlatformTransactionManager
 
 /**
   * Created by GeorgeZeng on 16/2/19.
   */
-trait ResourceConfigModel {
+@Configuration
+@ComponentScan(Array("com.geo.dao"))
+class ApplicationConfig extends BasicResourceConfig {
   @Bean
   def appConfig(): Config = {
     val configDefault = ConfigFactory.load("application.conf")
@@ -31,9 +37,18 @@ trait ResourceConfigModel {
     ds
   }
 
-}
+  @Bean
+  def sessionFactory(dataSource: DataSource, config: Config): LocalSessionFactoryBean = {
+    createSessionFactory(dataSource, config)
+  }
 
-@Configuration
-class ResourceConfig extends ResourceConfigModel {
+  @Bean
+  def transactionManager(sessionFactory: SessionFactory): PlatformTransactionManager = {
+    createTransactionManager(sessionFactory)
+  }
+
+  override protected def defineHibernateAnnotatedClasses(): Array[Class[_]] = {
+    Array[Class[_]](classOf[User])
+  }
 
 }

@@ -87,27 +87,27 @@ class DynamicAopSettingPostProcessor implements BeanFactoryPostProcessor {
 }
 
 
-@EnableTransactionManagement
-abstract class BasicResourceConfig {
-    @Bean
-    def LocalSessionFactoryBean sessionFactory(DataSource ds) {
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean()
-        sessionFactory.setAnnotatedClasses(defineHibernateAnnotatedClasses())
-        sessionFactory.setDataSource(ds)
-        Properties props = defineHibernateProperties()
-        sessionFactory.setHibernateProperties(props)
-        sessionFactory
-    }
-
-    protected abstract Class<?>[] defineHibernateAnnotatedClasses()
-
-    protected abstract Properties defineHibernateProperties()
-
-    @Bean
-    def PlatformTransactionManager transactionManager(SessionFactory sessionFactory) {
-        HibernateTransactionManager manager = new HibernateTransactionManager()
-        manager.setSessionFactory(sessionFactory)
-        manager
-    }
-
-}
+//@EnableTransactionManagement
+//abstract class BasicResourceConfig {
+//    @Bean
+//    def LocalSessionFactoryBean sessionFactory(DataSource ds) {
+//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean()
+//        sessionFactory.setAnnotatedClasses(defineHibernateAnnotatedClasses())
+//        sessionFactory.setDataSource(ds)
+//        Properties props = defineHibernateProperties()
+//        sessionFactory.setHibernateProperties(props)
+//        sessionFactory
+//    }
+//
+//    protected abstract Class<?>[] defineHibernateAnnotatedClasses()
+//
+//    protected abstract Properties defineHibernateProperties()
+//
+//    @Bean
+//    def PlatformTransactionManager transactionManager(SessionFactory sessionFactory) {
+//        HibernateTransactionManager manager = new HibernateTransactionManager()
+//        manager.setSessionFactory(sessionFactory)
+//        manager
+//    }
+//
+//}

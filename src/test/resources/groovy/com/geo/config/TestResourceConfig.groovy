@@ -1,6 +1,15 @@
 package com.geo.config
 
+import com.geo.entity.User
+import com.typesafe.config.Config
+import org.hibernate.SessionFactory
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean
+import org.springframework.transaction.PlatformTransactionManager
+
+import javax.sql.DataSource
 
 /**
  * Created by GeorgeZeng on 16/3/3.
@@ -8,18 +17,19 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class TestResourceConfig extends BasicResourceConfig {
 
-    @Override
-    protected Class<?>[] defineHibernateAnnotatedClasses() {
-        return [com.geo.entity.TestUser.class]
+    @Bean
+    def LocalSessionFactoryBean sessionFactory(DataSource dataSource, Config config) {
+        createSessionFactory(dataSource, config)
+    }
+
+    @Bean
+    def PlatformTransactionManager transactionManager(SessionFactory sessionFactory) {
+        createTransactionManager(sessionFactory)
     }
 
     @Override
-    protected Properties defineHibernateProperties() {
-        def props = new Properties()
-        props.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
-        props.setProperty("hibernate.show_sql", "true")
-        props.setProperty("hibernate.format_sql", "true")
-        props
+    def Class<?>[] defineHibernateAnnotatedClasses() {
+        return [User.class]
     }
 
 }

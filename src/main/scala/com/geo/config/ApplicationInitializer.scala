@@ -9,7 +9,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 class ApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
   override def getRootConfigClasses: Array[Class[_]] = {
-    Array[Class[_]](classOf[ResourceConfig], classOf[SecurityConfig])
+    Array[Class[_]](classOf[ApplicationConfig], classOf[SecurityConfig])
   }
 
   override def getServletConfigClasses: Array[Class[_]] = Array[Class[_]](classOf[WebConfig])

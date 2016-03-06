@@ -1,6 +1,6 @@
 package com.geo.dao
 
-import com.geo.entity.TestUser
+import com.geo.entity.User
 import org.hibernate.SessionFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +17,7 @@ class TestUserDAO implements InitializingBean {
     SessionFactory sessionFactory
 
     def list() {
-        sessionFactory.getCurrentSession().createCriteria(TestUser.class).list()
+        sessionFactory.getCurrentSession().createCriteria(User.class).list()
     }
 
     def save(user) {
@@ -28,10 +28,17 @@ class TestUserDAO implements InitializingBean {
         def session = sessionFactory.openStatelessSession()
         try {
             session.createSQLQuery("""
-            CREATE TABLE IF NOT EXISTS `${TestUser.class.simpleName}`  (
-              `id` bigint(20) NOT NULL AUTO_INCREMENT,
-              `name` varchar(255) DEFAULT NULL,
-              PRIMARY KEY (`id`),
+            CREATE TABLE IF NOT EXISTS `${User.class.simpleName}`  (
+              `id` bigint(20) NOT NULL,
+              `username` varchar(100) NOT NULL,
+              `password` varchar(100) NOT NULL,
+              `email` varchar(100) NOT NULL,
+              `birth` date DEFAULT NULL,
+              `createdTime` datetime NOT NULL,
+              `updatedTime` datetime NOT NULL,
+              `createdBy` varchar(100) NOT NULL,
+              `updatedBy` varchar(100) NOT NULL,
+              PRIMARY KEY (`id`)
             ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
         """).executeUpdate()
         } finally {
