@@ -22,10 +22,8 @@ class DynamicWebApplicationContext(entry: String, dynamicManager: DynamicManager
   }
 
   override def destroy(): Unit = {
-    this.synchronized {
-//      super.destroy()
-      dynamicManager.remove(entry)
-    }
+    super.destroy()
+    dynamicManager.remove(entry)
   }
 
   def detectDestroyIfNecessary(force: Boolean = false): Option[DynamicWebApplicationContext] = {
