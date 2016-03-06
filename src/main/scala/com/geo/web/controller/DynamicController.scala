@@ -6,7 +6,7 @@ import javax.servlet.{ServletConfig, ServletContext}
 
 import com.geo.dynamic.spring.ServletContextHolder
 import com.geo.dynamic.spring.context.DynamicWebApplicationContext
-import com.geo.dynamic.{DynamicClassLoader, DynamicEntryLoader}
+import com.geo.dynamic.{DynamicClassLoader, DynamicMappingLoader}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,7 +35,7 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
   }
 
   private val groovyResourceClsLoader = new DynamicClassLoader(getClass.getClassLoader)
-  private val entryMappingLoader = new DynamicEntryLoader()
+  private val entryMappingLoader = new DynamicMappingLoader
 
   @RequestMapping(path = Array("/refreshContexts"))
   @ResponseBody
@@ -70,7 +70,7 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
 
   private def getEntryClsName(entry: String): String = {
     val entryMappingCls = groovyResourceClsLoader.loadClass(config.getConfig("groovy").getString("entryMapping"))
-    entryMappingLoader.entryMapping(entryMappingCls).get(entry)
+    entryMappingLoader.getMapping(entryMappingCls).get(entry)
   }
 
   private def getEntryServlet(entry: String, entryClsName: String, ctx: WebApplicationContext): DispatcherServlet = {

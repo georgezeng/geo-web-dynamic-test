@@ -1,15 +1,15 @@
 package com.geo.service
 
-import com.geo.config.WithConfig
 import com.geo.dao.TestUserDAO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
 
 /**
  * Created by GeorgeZeng on 16/3/2.
  */
 @Service
-@WithConfig(classes = [com.geo.aop.TestAspect.class, com.geo.config.TestResourceConfig.class])
+@Import([com.geo.aop.TestAspect.class, com.geo.config.TestResourceConfig.class])
 class TestService {
     @Autowired
     TestUserDAO dao

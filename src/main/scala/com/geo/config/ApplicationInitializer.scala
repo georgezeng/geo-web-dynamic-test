@@ -9,7 +9,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 class ApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
   override def getRootConfigClasses: Array[Class[_]] = {
-    Array[Class[_]](classOf[ResourceConfig])
+    Array[Class[_]](classOf[ResourceConfig], classOf[SecurityConfig])
   }
 
   override def getServletConfigClasses: Array[Class[_]] = Array[Class[_]](classOf[WebConfig])
@@ -20,7 +20,4 @@ class ApplicationInitializer extends AbstractAnnotationConfigDispatcherServletIn
 //    Array[Filter](new StaticResourceFilter)
 //  }
 
-//  override protected def createRootApplicationContext(): WebApplicationContext = {
-//    new DynamicRefreshableWebApplicationContext(super.createRootApplicationContext)
-//  }
 }

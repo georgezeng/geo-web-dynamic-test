@@ -5,6 +5,7 @@ package com.geo.config
  */
 class DynamicEntryMapping {
     public static final def map = [
-            "test": "com.geo.web.TestController"
+            "test": "com.geo.web.TestController",
+            "user": "com.geo.web.controller.UserController",
     ]
 }

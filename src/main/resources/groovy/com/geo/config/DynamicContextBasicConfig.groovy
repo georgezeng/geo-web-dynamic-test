@@ -15,7 +15,6 @@ import org.springframework.beans.factory.support.RootBeanDefinition
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.orm.hibernate5.HibernateTransactionManager
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean
 import org.springframework.transaction.PlatformTransactionManager
@@ -26,7 +25,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver
 import org.springframework.web.servlet.view.JstlView
 
 import javax.sql.DataSource
-import java.text.SimpleDateFormat
 
 /**
  * Created by GeorgeZeng on 16/2/21.

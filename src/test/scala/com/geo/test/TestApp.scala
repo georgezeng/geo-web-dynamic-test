@@ -1,6 +1,6 @@
 package com.geo.test
 
-import com.geo.config.{ResourceConfigModel, WebConfigModel}
+import com.geo.config.{SecurityConfig, ResourceConfigModel, WebConfigModel}
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @SpringBootApplication
 @ComponentScan(basePackages = Array("com.geo.web"))
 @EnableWebMvc
-class TestConfig extends WebConfigModel with ResourceConfigModel {
+class TestConfig extends SecurityConfig with WebConfigModel with ResourceConfigModel {
 
 }
 
