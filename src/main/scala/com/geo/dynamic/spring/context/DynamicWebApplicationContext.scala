@@ -22,7 +22,7 @@ class DynamicWebApplicationContext(entry: String, dynamicManager: DynamicManager
   }
 
   override def destroy(): Unit = {
-    super.destroy()
+//    super.destroy()
     dynamicManager.remove(entry)
   }
 

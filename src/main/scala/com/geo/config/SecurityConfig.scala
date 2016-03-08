@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.http.HttpMethod
 import org.springframework.security.access.expression.SecurityExpressionHandler
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.ObjectPostProcessor
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.{EnableWebSecurity, WebSecurityConfigurerAdapter}
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.FilterInvocation
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
@@ -32,12 +34,19 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     this.config = config
   }
 
+  private var userDetailsServiceImpl: UserDetailsService = _
+
   @Autowired
-  def configureGlobal(auth: AuthenticationManagerBuilder): Unit = {
-    auth
-      .inMemoryAuthentication()
-      .withUser("user").password("111111").roles("USER")
+  def setUserDetailsServiceImpl(userDetailsServiceImpl: UserDetailsService): Unit = {
+    this.userDetailsServiceImpl = userDetailsServiceImpl
   }
+
+  //  @Autowired
+  //  def configureGlobal(auth: AuthenticationManagerBuilder): Unit = {
+  //    auth
+  //      .inMemoryAuthentication()
+  //      .withUser("user").password("111111").roles("USER")
+  //  }
 
   override protected def configure(http: HttpSecurity): Unit = {
     def getExpressionHandlerMethod(methods: Array[Method]): Method = {
@@ -64,12 +73,19 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
       }
     })
 
+    val authenticationProvider = new DaoAuthenticationProvider
+    authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder)
+    authenticationProvider.setUserDetailsService(userDetailsServiceImpl)
     http
       .formLogin()
       .and()
       .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout/**", HttpMethod.GET.name(), false))
+      .and()
+      .authenticationProvider(authenticationProvider)
+//      .userDetailsService(userDetailsServiceImpl)
 
-    if(Environment.current == Environment.Test) {
+
+    if (Environment.current == Environment.Test) {
       http.csrf().disable()
     }
   }

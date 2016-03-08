@@ -1,4 +1,4 @@
-package com.geo.service
+package groovy.com.geo.service
 
 import com.geo.entity.BaseEntity
 

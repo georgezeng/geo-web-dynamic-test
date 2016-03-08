@@ -34,4 +34,14 @@ object ReflectionUtil extends ReflectionUtils {
     c.setAccessible(true)
     c.newInstance(args: _*)
   }
+
+  def setFieldValue(cls: Class[_], fieldName: String, instance: AnyRef, value: Any): Unit = {
+    val field = cls.getDeclaredField(fieldName)
+    if(field != null) {
+      field.setAccessible(true)
+      field.set(instance, value)
+    } else {
+      throw new IllegalArgumentException(s"Field '${fieldName}' not found")
+    }
+  }
 }

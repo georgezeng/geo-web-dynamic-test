@@ -1,8 +1,7 @@
-package com.geo.config
+package groovy.com.geo.config
 
 import com.geo.dynamic.spring.ServletContextHolder
 import com.geo.dynamic.spring.aop.DynamicAopProxyFactory
-import org.hibernate.SessionFactory
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
 import org.springframework.aop.config.AopConfigUtils
 import org.springframework.aop.framework.ProxyFactory
@@ -15,16 +14,10 @@ import org.springframework.beans.factory.support.RootBeanDefinition
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
-import org.springframework.orm.hibernate5.HibernateTransactionManager
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean
-import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.web.context.support.ServletContextAwareProcessor
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.view.InternalResourceViewResolver
 import org.springframework.web.servlet.view.JstlView
-
-import javax.sql.DataSource
 
 /**
  * Created by GeorgeZeng on 16/2/21.
@@ -86,28 +79,3 @@ class DynamicAopSettingPostProcessor implements BeanFactoryPostProcessor {
 
 }
 
-
-//@EnableTransactionManagement
-//abstract class BasicResourceConfig {
-//    @Bean
-//    def LocalSessionFactoryBean sessionFactory(DataSource ds) {
-//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean()
-//        sessionFactory.setAnnotatedClasses(defineHibernateAnnotatedClasses())
-//        sessionFactory.setDataSource(ds)
-//        Properties props = defineHibernateProperties()
-//        sessionFactory.setHibernateProperties(props)
-//        sessionFactory
-//    }
-//
-//    protected abstract Class<?>[] defineHibernateAnnotatedClasses()
-//
-//    protected abstract Properties defineHibernateProperties()
-//
-//    @Bean
-//    def PlatformTransactionManager transactionManager(SessionFactory sessionFactory) {
-//        HibernateTransactionManager manager = new HibernateTransactionManager()
-//        manager.setSessionFactory(sessionFactory)
-//        manager
-//    }
-//
-//}

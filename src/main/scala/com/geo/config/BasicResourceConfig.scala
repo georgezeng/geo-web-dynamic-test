@@ -1,10 +1,13 @@
 package com.geo.config
 
+import java.util
 import java.util.Properties
 import javax.sql.DataSource
 
+import com.geo.entity.{RoleAuthority, UserRole, Role, User}
 import com.typesafe.config.Config
 import org.hibernate.SessionFactory
+import org.springframework.context.annotation.Bean
 import org.springframework.orm.hibernate5.{HibernateTransactionManager, LocalSessionFactoryBean}
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
@@ -12,11 +15,17 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 /**
   * Created by GeorgeZeng on 16/3/6.
   */
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 abstract class BasicResourceConfig {
-  def createSessionFactory(ds: DataSource, config: Config): LocalSessionFactoryBean = {
+  @Bean
+  def sessionFactory(ds: DataSource, config: Config): LocalSessionFactoryBean = {
     val sessionFactory = new LocalSessionFactoryBean()
-    sessionFactory.setAnnotatedClasses(defineHibernateAnnotatedClasses(): _*)
+    val clsSet = defineHibernateAnnotatedClasses()
+    clsSet.add(classOf[User])
+    clsSet.add(classOf[Role])
+    clsSet.add(classOf[UserRole])
+    clsSet.add(classOf[RoleAuthority])
+    sessionFactory.setAnnotatedClasses(clsSet.toArray[Class[_]](Array[Class[_]]()): _*)
     sessionFactory.setDataSource(ds)
     val hibernateConfig = config.getConfig("hibernate")
     val props = new Properties
@@ -28,13 +37,14 @@ abstract class BasicResourceConfig {
     sessionFactory
   }
 
-  protected def defineHibernateAnnotatedClasses(): Array[Class[_]]
+  protected def defineHibernateAnnotatedClasses(): util.Set[Class[_]]
 
   protected def defineHibernateProperties(props: Properties, config: Config): Unit = {
 
   }
 
-  def createTransactionManager(sessionFactory: SessionFactory): PlatformTransactionManager = {
+  @Bean
+  def transactionManager(sessionFactory: SessionFactory): PlatformTransactionManager = {
     val manager = new HibernateTransactionManager()
     manager.setSessionFactory(sessionFactory)
     manager

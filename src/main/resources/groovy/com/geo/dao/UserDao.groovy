@@ -1,4 +1,4 @@
-package com.geo.dao
+package groovy.com.geo.dao
 
 import com.geo.entity.User
 import org.hibernate.SessionFactory
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Repository
 @Transactional
-class UserDao extends com.geo.dao.EntityBasicOPDao<User> {
+class UserDao extends EntityBasicOPDao<User> {
     @Autowired
     private SessionFactory sessionFactory
 

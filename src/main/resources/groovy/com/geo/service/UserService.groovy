@@ -1,7 +1,7 @@
-package com.geo.service
+package groovy.com.geo.service
 
-import com.geo.entity.User
-import com.geo.dao.UserDAO
+import groovy.com.geo.entity.User
+import groovy.com.geo.dao.UserDAO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

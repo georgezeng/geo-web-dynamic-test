@@ -1,21 +1,19 @@
 package com.geo.config
 
+import java.util
 import javax.sql.DataSource
 
-import com.geo.entity.User
 import com.geo.enums.Environment
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.commons.dbcp2.BasicDataSource
-import org.hibernate.SessionFactory
-import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean
-import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.context.annotation.{Bean, ComponentScan, Configuration, EnableAspectJAutoProxy}
 
 /**
   * Created by GeorgeZeng on 16/2/19.
   */
 @Configuration
-@ComponentScan(Array("com.geo.dao"))
+@ComponentScan(Array("com.geo.spring", "com.geo.dao", "com.geo.service"))
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 class ApplicationConfig extends BasicResourceConfig {
   @Bean
   def appConfig(): Config = {
@@ -37,18 +35,8 @@ class ApplicationConfig extends BasicResourceConfig {
     ds
   }
 
-  @Bean
-  def sessionFactory(dataSource: DataSource, config: Config): LocalSessionFactoryBean = {
-    createSessionFactory(dataSource, config)
-  }
-
-  @Bean
-  def transactionManager(sessionFactory: SessionFactory): PlatformTransactionManager = {
-    createTransactionManager(sessionFactory)
-  }
-
-  override protected def defineHibernateAnnotatedClasses(): Array[Class[_]] = {
-    Array[Class[_]](classOf[User])
+  override protected def defineHibernateAnnotatedClasses(): util.Set[Class[_]] = {
+    new util.LinkedHashSet[Class[_]]
   }
 
 }

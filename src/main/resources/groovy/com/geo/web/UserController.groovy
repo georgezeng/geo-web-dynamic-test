@@ -1,4 +1,4 @@
-package com.geo.web.controller
+package groovy.com.geo.web
 
 import com.geo.entity.User
 import com.geo.service.UserService

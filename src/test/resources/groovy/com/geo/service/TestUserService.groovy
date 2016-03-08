@@ -1,16 +1,18 @@
-package com.geo.service
+package groovy.com.geo.service
 
-import com.geo.dao.TestUserDAO
+import groovy.com.geo.dao.TestUserDAO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Created by GeorgeZeng on 16/3/2.
  */
 @Service
-@Import([com.geo.aop.TestAspect.class, com.geo.config.TestResourceConfig.class])
-class TestService {
+@Transactional
+@Import([groovy.com.geo.aop.TestAspect.class, groovy.com.geo.config.TestResourceConfig.class])
+class TestUserService {
     @Autowired
     TestUserDAO dao
 

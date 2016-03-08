@@ -10,15 +10,17 @@ import org.hibernate.annotations.GenericGenerator
   * Created by GeorgeZeng on 16/3/6.
   */
 @MappedSuperclass
-abstract class BaseEntity[Key <: java.io.Serializable] {
+trait BaseEntity[Key <: java.io.Serializable] extends java.io.Serializable {
 
-  protected var id: Key = _
+  private var id: Key = _
   private var createdTime: Date = _
   private var updatedTime: Date = _
   private var createdBy: String = _
   private var updatedBy: String = _
 
-  private def setId(id: Key): Unit = {
+  def getId(): Key = id
+
+  protected def setId(id: Key): Unit = {
     this.id = id
   }
 
@@ -57,11 +59,9 @@ abstract class BaseEntity[Key <: java.io.Serializable] {
 }
 
 @MappedSuperclass
-abstract class LongKeyEntity extends BaseEntity[jLong] {
+trait LongKeyEntity extends BaseEntity[jLong] {
   @Id
   @GeneratedValue(generator = "increment")
   @GenericGenerator(name = "increment", strategy = "increment")
-  def getId(): jLong = {
-    id
-  }
+  override def getId(): jLong = super.getId()
 }

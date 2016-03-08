@@ -3,7 +3,7 @@ package com.geo.security
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.{FilterChain, ServletRequest, ServletResponse}
 
-import com.geo.dao.UserDAO
+import com.geo.dao.UserDao
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
@@ -14,10 +14,10 @@ import org.springframework.web.filter.GenericFilterBean
   */
 //@Component
 class UserSessionFilter extends GenericFilterBean {
-  private var userDao: UserDAO = _
+  private var userDao: UserDao = _
 
   @Autowired
-  def setUserDao(dao: UserDAO): Unit = {
+  def setUserDao(dao: UserDao): Unit = {
     this.userDao = dao
   }
 
