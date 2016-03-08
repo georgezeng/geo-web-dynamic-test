@@ -1,10 +1,8 @@
 package com.geo.config
 
-import java.util
 import java.util.Properties
 import javax.sql.DataSource
 
-import com.geo.entity.{RoleAuthority, UserRole, Role, User}
 import com.typesafe.config.Config
 import org.hibernate.SessionFactory
 import org.springframework.context.annotation.Bean
@@ -20,12 +18,7 @@ abstract class BasicResourceConfig {
   @Bean
   def sessionFactory(ds: DataSource, config: Config): LocalSessionFactoryBean = {
     val sessionFactory = new LocalSessionFactoryBean()
-    val clsSet = defineHibernateAnnotatedClasses()
-    clsSet.add(classOf[User])
-    clsSet.add(classOf[Role])
-    clsSet.add(classOf[UserRole])
-    clsSet.add(classOf[RoleAuthority])
-    sessionFactory.setAnnotatedClasses(clsSet.toArray[Class[_]](Array[Class[_]]()): _*)
+    sessionFactory.setAnnotatedClasses(defineHibernateAnnotatedClasses(): _*)
     sessionFactory.setDataSource(ds)
     val hibernateConfig = config.getConfig("hibernate")
     val props = new Properties
@@ -37,7 +30,7 @@ abstract class BasicResourceConfig {
     sessionFactory
   }
 
-  protected def defineHibernateAnnotatedClasses(): util.Set[Class[_]]
+  protected def defineHibernateAnnotatedClasses(): Array[Class[_]]
 
   protected def defineHibernateProperties(props: Properties, config: Config): Unit = {
 

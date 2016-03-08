@@ -1,12 +1,12 @@
 package com.geo.config
 
-import java.util
 import javax.sql.DataSource
 
+import com.geo.entity.{Role, UserRole, RoleAuthority, User}
 import com.geo.enums.Environment
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.commons.dbcp2.BasicDataSource
-import org.springframework.context.annotation.{Bean, ComponentScan, Configuration, EnableAspectJAutoProxy}
+import org.springframework.context.annotation.{EnableAspectJAutoProxy, Bean, ComponentScan, Configuration}
 
 /**
   * Created by GeorgeZeng on 16/2/19.
@@ -35,8 +35,8 @@ class ApplicationConfig extends BasicResourceConfig {
     ds
   }
 
-  override protected def defineHibernateAnnotatedClasses(): util.Set[Class[_]] = {
-    new util.LinkedHashSet[Class[_]]
+  override protected def defineHibernateAnnotatedClasses(): Array[Class[_]] = {
+    Array[Class[_]](classOf[User], classOf[Role], classOf[RoleAuthority], classOf[UserRole])
   }
 
 }
