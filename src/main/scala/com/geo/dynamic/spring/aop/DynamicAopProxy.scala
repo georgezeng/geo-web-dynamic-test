@@ -1,6 +1,5 @@
 package com.geo.dynamic.spring.aop
 
-import com.geo.util.ReflectionUtil
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import groovy.lang.GroovyObject
 import org.springframework.aop.framework.{AdvisedSupport, AopConfigException, AopProxy}
@@ -18,20 +17,20 @@ class DynamicAopProxy(advised: AdvisedSupport) extends AopProxy with Serializabl
     }
   }
 
-  private var constructorArgs: Array[AnyRef] = _
-  private var constructorArgTypes: Array[Class[_]] = _
-
-  def setConstructorArguments(constructorArgs: Array[AnyRef], constructorArgTypes: Array[Class[_]]): Unit = {
-    if (constructorArgs == null || constructorArgTypes == null) {
-      throw new IllegalArgumentException("Both 'constructorArgs' and 'constructorArgTypes' need to be specified")
-    }
-    if (constructorArgs.length != constructorArgTypes.length) {
-      throw new IllegalArgumentException("Number of 'constructorArgs' (" + constructorArgs.length
-        + ") must match number of 'constructorArgTypes' (" + constructorArgTypes.length + ")")
-    }
-    this.constructorArgs = constructorArgs
-    this.constructorArgTypes = constructorArgTypes
-  }
+//  private var constructorArgs: Array[AnyRef] = _
+//  private var constructorArgTypes: Array[Class[_]] = _
+//
+//  def setConstructorArguments(constructorArgs: Array[AnyRef], constructorArgTypes: Array[Class[_]]): Unit = {
+//    if (constructorArgs == null || constructorArgTypes == null) {
+//      throw new IllegalArgumentException("Both 'constructorArgs' and 'constructorArgTypes' need to be specified")
+//    }
+//    if (constructorArgs.length != constructorArgTypes.length) {
+//      throw new IllegalArgumentException("Number of 'constructorArgs' (" + constructorArgs.length
+//        + ") must match number of 'constructorArgTypes' (" + constructorArgTypes.length + ")")
+//    }
+//    this.constructorArgs = constructorArgs
+//    this.constructorArgTypes = constructorArgTypes
+//  }
 
   override def getProxy: AnyRef = {
     getProxy(advised.getTargetClass.getClassLoader)
@@ -41,9 +40,9 @@ class DynamicAopProxy(advised: AdvisedSupport) extends AopProxy with Serializabl
     logger.debug("Creating groovy proxy: target source is " + this.advised.getTargetSource())
     try {
       val rootClass = this.advised.getTargetClass.asInstanceOf[Class[GroovyObject]]
-      val metaClass = new DynamicAopPorxyMetaClass(advised, rootClass)
-      val proxy = ReflectionUtil.initiate[GroovyObject](rootClass, constructorArgs, constructorArgTypes)
-      proxy.setMetaClass(metaClass)
+      val proxy = advised.getTargetSource.getTarget.asInstanceOf[GroovyObject]
+//      val proxy = ReflectionUtil.initiate[GroovyObject](rootClass, constructorArgs, constructorArgTypes)
+      proxy.setMetaClass(new DynamicAopPorxyMetaClass(advised, rootClass))
       proxy
     } catch {
       case ex: Exception => throw new AopConfigException("Unexpected AOP exception: " + ex.getMessage, ex)

@@ -1,6 +1,7 @@
 package groovy.com.geo.service
 
-import groovy.com.geo.dao.TestUserDAO
+import groovy.com.geo.dao.TestContactDao
+import groovy.com.geo.entity.TestContact
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.stereotype.Service
@@ -12,15 +13,10 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 @Import([groovy.com.geo.aop.TestAspect.class, groovy.com.geo.config.TestResourceConfig.class])
-class TestUserService {
+class TestContactService extends BaseService<TestContact> {
     @Autowired
-    TestUserDAO dao
-
-    def list() {
-        dao.list()
+    public TestContactService(TestContactDao dao) {
+        super(dao)
     }
 
-    def save(user) {
-        dao.save(user)
-    }
 }

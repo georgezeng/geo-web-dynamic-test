@@ -1,7 +1,7 @@
 package com.geo.entity
 
 import java.util.Date
-import javax.persistence.{Id, GeneratedValue, MappedSuperclass}
+import javax.persistence.{Transient, Id, GeneratedValue, MappedSuperclass}
 import java.lang.{Long => jLong}
 
 import org.hibernate.annotations.GenericGenerator
@@ -10,7 +10,7 @@ import org.hibernate.annotations.GenericGenerator
   * Created by GeorgeZeng on 16/3/6.
   */
 @MappedSuperclass
-trait BaseEntity[Key <: java.io.Serializable] extends java.io.Serializable {
+abstract class BaseEntity[Key <: java.io.Serializable] extends java.io.Serializable {
 
   private var id: Key = _
   private var createdTime: Date = _
@@ -18,9 +18,10 @@ trait BaseEntity[Key <: java.io.Serializable] extends java.io.Serializable {
   private var createdBy: String = _
   private var updatedBy: String = _
 
+  @Transient
   def getId(): Key = id
 
-  protected def setId(id: Key): Unit = {
+  private def setId(id: Key): Unit = {
     this.id = id
   }
 
@@ -59,7 +60,7 @@ trait BaseEntity[Key <: java.io.Serializable] extends java.io.Serializable {
 }
 
 @MappedSuperclass
-trait LongKeyEntity extends BaseEntity[jLong] {
+abstract class LongKeyEntity extends BaseEntity[jLong] {
   @Id
   @GeneratedValue(generator = "increment")
   @GenericGenerator(name = "increment", strategy = "increment")

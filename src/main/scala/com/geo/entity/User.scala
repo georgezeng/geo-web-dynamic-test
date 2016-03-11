@@ -13,7 +13,7 @@ import scala.collection.JavaConversions._
   * Created by GeorgeZeng on 16/3/6.
   */
 @Entity(name = "User")
-class User extends UserDetails with LongKeyEntity {
+class User extends LongKeyEntity with UserDetails {
 
   trait SimpleView {}
 

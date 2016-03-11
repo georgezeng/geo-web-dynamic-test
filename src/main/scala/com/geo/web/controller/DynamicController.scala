@@ -40,8 +40,10 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
   @RequestMapping(path = Array("/refreshContexts"))
   @ResponseBody
   def refreshContexts(): String = {
-    for ((clsName, ctx) <- dynamicContextMapping) {
-      ctx.detectDestroyIfNecessary(true)
+    this.synchronized {
+      for ((clsName, ctx) <- dynamicContextMapping) {
+        ctx.detectDestroyIfNecessary(true)
+      }
     }
     "Refresh all contexts success."
   }

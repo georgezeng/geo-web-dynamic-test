@@ -5,6 +5,7 @@ import com.geo.entity.Role
 import com.geo.entity.RoleAuthority
 import com.geo.entity.User
 import com.geo.entity.UserRole
+import groovy.com.geo.entity.TestContact
 import org.springframework.context.annotation.Configuration
 
 /**
@@ -15,7 +16,7 @@ class TestResourceConfig extends BasicResourceConfig {
 
     @Override
     def Class<?>[] defineHibernateAnnotatedClasses() {
-        return [User.class, Role.class, UserRole.class, RoleAuthority.class]
+        return [TestContact.class]
     }
 
 }

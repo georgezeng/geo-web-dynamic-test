@@ -2,7 +2,7 @@ package com.geo.service
 
 import java.text.SimpleDateFormat
 
-import com.geo.dao.{BaseDao, UserDao}
+import com.geo.dao.UserDao
 import com.geo.entity.{Role, User}
 import com.geo.util.ReflectionUtil
 import com.typesafe.config.Config
@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class UserService @Autowired()(dao: UserDao,
                                roleService: RoleService,
-                               config: Config) extends BaseService[User] {
-
-  override def getDao(): BaseDao[User] = dao
+                               config: Config) extends BaseService[User](dao) {
 
   def createAdminIfNecessary(adminRole: Role): User = {
     val adminConfig = config.getConfig("admin")
@@ -32,7 +30,7 @@ class UserService @Autowired()(dao: UserDao,
       admin.setEmail(adminConfig.getString("email"))
       admin.setBirth(sdf.parse(adminConfig.getString("birth")))
       admin.setCreatedBy(admin.getUsername)
-      save(admin)
+      admin.setUpdatedBy(admin.getUsername)
       val theAdminRole = roleService.load(adminRole.getId())
       admin.addRole(theAdminRole)
       save(admin)

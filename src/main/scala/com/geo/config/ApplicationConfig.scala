@@ -12,7 +12,7 @@ import org.springframework.context.annotation.{EnableAspectJAutoProxy, Bean, Com
   * Created by GeorgeZeng on 16/2/19.
   */
 @Configuration
-@ComponentScan(Array("com.geo.spring", "com.geo.dao", "com.geo.service"))
+@ComponentScan(Array("com.geo.spring", "com.geo.dao", "com.geo.service", "com.geo.security", "com.geo.filter"))
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 class ApplicationConfig extends BasicResourceConfig {
   @Bean

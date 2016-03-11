@@ -1,6 +1,7 @@
 package com.geo.service
 
-import org.springframework.beans.factory.InitializingBean
+import javax.annotation.PostConstruct
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional
   */
 @Service
 @Transactional
-class AdminService @Autowired()(userService: UserService,
-                                roleService: RoleService) extends InitializingBean {
+class AdminService @Autowired()(userService: UserService, roleService: RoleService) {
 
-  override def afterPropertiesSet(): Unit = {
+  @PostConstruct
+  def createAdminAndRoleIfNecessary(): Unit = {
     val adminRole = roleService.createAdminRoleIfNecessary
     userService.createAdminIfNecessary(adminRole)
   }

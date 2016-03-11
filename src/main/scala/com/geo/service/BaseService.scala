@@ -10,20 +10,19 @@ import org.springframework.transaction.annotation.Transactional
   * Created by GeorgeZeng on 16/3/7.
   */
 @Transactional
-abstract class BaseService[T <: BaseEntity[_ <: Serializable]] extends LazyLogging {
-  def getDao(): BaseDao[T]
+abstract class BaseService[T <: BaseEntity[_ <: Serializable]](protected val dao: BaseDao[T]) extends LazyLogging {
 
   @Transactional(readOnly = true)
   def load(id: Serializable): T = {
-    getDao().load(id)
+    dao.load(id)
   }
 
   @Transactional(readOnly = true)
   def get(id: Serializable): T = {
-    getDao().get(id)
+    dao.get(id)
   }
 
   def save(o: T): Unit = {
-    getDao().save(o)
+    dao.save(o)
   }
 }

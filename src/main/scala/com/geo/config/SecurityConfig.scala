@@ -4,6 +4,8 @@ import java.lang.reflect.Method
 
 import com.geo.dynamic.spring.security.DynamicSecurityMetadataSource
 import com.geo.enums.Environment
+import com.geo.filter.StaticResourceFilter
+import com.geo.security.UserSessionFilter
 import com.typesafe.config.Config
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.ComponentScan
@@ -41,12 +43,19 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     this.userDetailsServiceImpl = userDetailsServiceImpl
   }
 
-  //  @Autowired
-  //  def configureGlobal(auth: AuthenticationManagerBuilder): Unit = {
-  //    auth
-  //      .inMemoryAuthentication()
-  //      .withUser("user").password("111111").roles("USER")
-  //  }
+  private var userSessionFilter: UserSessionFilter = _
+
+  @Autowired
+  def setUserSessionFilter(userSessionFilter: UserSessionFilter): Unit = {
+    this.userSessionFilter = userSessionFilter
+  }
+
+  private var staticResourceFilter: StaticResourceFilter = _
+
+  @Autowired
+  def setStaticResourceFilter(staticResourceFilter: StaticResourceFilter): Unit = {
+    this.staticResourceFilter = staticResourceFilter
+  }
 
   override protected def configure(http: HttpSecurity): Unit = {
     def getExpressionHandlerMethod(methods: Array[Method]): Method = {
@@ -82,10 +91,10 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
       .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout/**", HttpMethod.GET.name(), false))
       .and()
       .authenticationProvider(authenticationProvider)
-//      .userDetailsService(userDetailsServiceImpl)
+      .addFilterAfter(staticResourceFilter, classOf[FilterSecurityInterceptor])
+      .addFilterAfter(userSessionFilter, classOf[StaticResourceFilter])
 
-
-    if (Environment.current == Environment.Test) {
+    if (Environment.isTest()) {
       http.csrf().disable()
     }
   }

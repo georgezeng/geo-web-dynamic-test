@@ -1,12 +1,9 @@
 package groovy.com.geo.web
 
-import com.fasterxml.jackson.annotation.JsonView
-import groovy.com.geo.service.TestUserService
-import com.geo.entity.User
+import groovy.com.geo.entity.TestContact
+import groovy.com.geo.service.TestContactService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -15,27 +12,21 @@ import org.springframework.web.bind.annotation.ResponseBody
  */
 @Controller
 @RequestMapping("/test")
-class TestUserController {
+class TestContactController {
 
     @Autowired
-    TestUserService testService
+    TestContactService testService
 
     @RequestMapping("/list")
     @ResponseBody
-    @JsonView(User.SimpleView.class)
     def list() {
         testService.list()
     }
 
     @RequestMapping("/save")
     @ResponseBody
-    def save(@RequestBody User user) {
-        testService.save(user)
+    def save(@RequestBody TestContact contact) {
+        testService.save(contact)
     }
 
-    @RequestMapping("/current")
-    @ResponseBody
-    def current() {
-        SecurityContextHolder.context.getAuthentication().principal
-    }
 }

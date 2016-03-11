@@ -1,7 +1,9 @@
 package com.geo.service
 
-import com.geo.dao.{BaseDao, RoleDao}
-import com.geo.entity.{RoleAuthority, Role}
+import java.util.Date
+
+import com.geo.dao.RoleDao
+import com.geo.entity.{Role, RoleAuthority}
 import com.typesafe.config.Config
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -12,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional
   */
 @Service
 @Transactional
-class RoleService @Autowired()(config: Config, dao: RoleDao, authorityService: RoleAuthorityService) extends BaseService[Role] {
-  override def getDao(): BaseDao[Role] = dao
+class RoleService @Autowired()(config: Config, dao: RoleDao, authorityService: RoleAuthorityService) extends BaseService[Role](dao) {
 
   @Transactional(readOnly = true)
   def findByName(name: String): Role = {
@@ -37,6 +38,9 @@ class RoleService @Autowired()(config: Config, dao: RoleDao, authorityService: R
         authority.setRole(adminRole)
         authority.setCreatedBy(updatedBy)
         authority.setUpdatedBy(updatedBy)
+        val time = new Date
+        authority.setCreatedTime(time)
+        authority.setUpdatedTime(time)
       }
       adminRole.addAuthority(authority)
       adminRole.setCreatedBy(updatedBy)

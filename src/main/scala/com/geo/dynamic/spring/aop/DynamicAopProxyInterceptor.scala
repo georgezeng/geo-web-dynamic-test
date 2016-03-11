@@ -5,7 +5,7 @@ import java.lang.reflect.Method
 import com.geo.util.ReflectionUtil
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import groovy.lang.{GroovyObject, Interceptor}
-import org.springframework.aop.framework.{ReflectiveMethodInvocation, AdvisedSupport}
+import org.springframework.aop.framework.{AdvisedSupport, ReflectiveMethodInvocation}
 
 /**
   * Created by GeorgeZeng on 16/2/21.
@@ -20,25 +20,19 @@ class DynamicAopProxyInterceptor(advised: AdvisedSupport) extends Interceptor wi
   override def beforeInvoke(proxy: AnyRef, methodName: String, arguments: Array[AnyRef]): AnyRef = {
     val target = getTarget()
     try {
+      var args = arguments
       val clazz = advised.getTargetClass()
       var retVal: AnyRef = null
-      var method: Method = null
-
-      findMethod()
-      def findMethod(): Unit = {
-        clazz.getDeclaredMethods.foreach { m =>
-          if (m.getName == methodName && ReflectionUtil.isMatchMethodTypes(m, arguments)) {
-            method = m
-            return
-          }
-        }
+      var method = ReflectionUtil.findMethod(clazz, methodName, arguments)
+      if (method == null) {
+        args = Array(methodName, arguments)
+        method = ReflectionUtil.findMethod(clazz, "invokeMethod", args, true)
       }
-
       var invokeTargetMethod = false
-      if(method != null) {
+      if (method != null) {
         val chain = advised.getInterceptorsAndDynamicInterceptionAdvice(method, clazz)
-        if(chain != null && !chain.isEmpty) {
-          val invocation = new DynamicMethodInvocation(proxy, target, method, arguments, clazz, chain)
+        if (chain != null && !chain.isEmpty) {
+          val invocation = new DynamicMethodInvocation(proxy, target, method, args, clazz, chain)
           // Proceed to the joinpoint through the interceptor chain.
           retVal = invocation.proceed()
         } else {

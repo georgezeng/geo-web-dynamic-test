@@ -35,5 +35,9 @@ object Environment extends Enumeration {
   def isDevOrTest(): Boolean = {
     current == Dev || current == Test
   }
+
+  def isTest(): Boolean = {
+    current == Test
+  }
 }
 

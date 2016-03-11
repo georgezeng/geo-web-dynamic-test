@@ -1,6 +1,6 @@
 package com.geo.service
 
-import com.geo.dao.{BaseDao, RoleAuthorityDao}
+import com.geo.dao.RoleAuthorityDao
 import com.geo.entity.RoleAuthority
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -11,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional
   */
 @Service
 @Transactional
-class RoleAuthorityService @Autowired()(dao: RoleAuthorityDao) extends BaseService[RoleAuthority] {
-  override def getDao(): BaseDao[RoleAuthority] = dao
+class RoleAuthorityService @Autowired()(dao: RoleAuthorityDao) extends BaseService[RoleAuthority](dao) {
 
   @Transactional(readOnly = true)
   def findByName(name: String): RoleAuthority = {
