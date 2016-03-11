@@ -46,6 +46,10 @@ abstract class BaseDao[T <: BaseEntity[_ <: Serializable]](protected val session
     sessionFactory.getCurrentSession.saveOrUpdate(o)
   }
 
+  def delete(o: T): Unit = {
+    sessionFactory.getCurrentSession.delete(o)
+  }
+
   protected def createCriteria(): Criteria = {
     sessionFactory.getCurrentSession
       .createCriteria(entityClass)

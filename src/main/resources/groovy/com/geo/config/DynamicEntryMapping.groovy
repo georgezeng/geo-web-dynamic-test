@@ -5,7 +5,7 @@ package groovy.com.geo.config
  */
 class DynamicEntryMapping {
     public static final def map = [
-            "test": "groovy.com.geo.web.TestContactController",
+            "testContact": "groovy.com.geo.web.TestContactController",
             "user": "groovy.com.geo.web.controller.UserController",
     ]
 }

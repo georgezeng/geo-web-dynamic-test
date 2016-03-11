@@ -25,4 +25,14 @@ abstract class BaseService[T <: BaseEntity[_ <: Serializable]](protected val dao
   def save(o: T): Unit = {
     dao.save(o)
   }
+
+  def delete(o: T): Unit = {
+    dao.delete(o)
+  }
+
+  def delete(objs: T*): Unit = {
+    for (o <- objs) {
+      dao.delete(o)
+    }
+  }
 }
