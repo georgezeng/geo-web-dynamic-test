@@ -15,7 +15,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 class TestAspect {
     def logger = LoggerFactory.getLogger(getClass())
 
-    @Before('execution (* com.geo.service..*(..))')
+    @Before('execution (* groovy.com.geo.service..*(..))')
     def before() {
         logger.info "i am invoked........."
     }
