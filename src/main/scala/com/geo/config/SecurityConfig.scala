@@ -94,7 +94,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
       .addFilterAfter(staticResourceFilter, classOf[FilterSecurityInterceptor])
       .addFilterAfter(userSessionFilter, classOf[StaticResourceFilter])
 
-    if (Environment.isTest()) {
+    if (Environment.isDev()) {
       http.csrf().disable()
     }
   }
