@@ -1,6 +1,6 @@
 package com.geo.filter
 
-import java.io.{BufferedReader, FileReader}
+import java.io.FileReader
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.{FilterChain, ServletRequest, ServletResponse}
 
@@ -23,7 +23,7 @@ class StaticResourceFilter @Autowired()(config: Config) extends GenericFilterBea
     val httpReq = request.asInstanceOf[HttpServletRequest]
     def isMatch(): Boolean = {
       for (extension <- staticResourceExtensions) {
-        val matcher = new AntPathRequestMatcher("/**/*." + extension)
+        val matcher = new AntPathRequestMatcher("/**." + extension)
         if (matcher.matches(httpReq)) {
           return true
         }
@@ -32,13 +32,13 @@ class StaticResourceFilter @Autowired()(config: Config) extends GenericFilterBea
     }
 
     if (isMatch) {
-      val reader = new BufferedReader(new FileReader(httpReq.getServletContext.getRealPath("/") + httpReq.getRequestURI))
-      val out = response.getWriter
+      val reader = new FileReader(httpReq.getServletContext.getRealPath("/") + httpReq.getRequestURI)
+      val out = response.getOutputStream
       try {
-        var line = reader.readLine()
-        while (line != null) {
-          out.write(line)
-          line = reader.readLine()
+        var c = reader.read()
+        while (c != -1) {
+          out.write(c)
+          c = reader.read()
         }
         out.flush()
       } finally {

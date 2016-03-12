@@ -1,5 +1,6 @@
 package groovy.com.geo.config
 
+import com.geo.dynamic.spring.DynamicConstant
 import com.geo.dynamic.spring.ServletContextHolder
 import com.geo.dynamic.spring.aop.DynamicAopProxyFactory
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
@@ -32,7 +33,7 @@ class DynamicContextBasicConfig {
 
     @Bean
     public ServletContextAwareProcessor servletContextAwareProcessor() {
-        return new ServletContextAwareProcessor(ServletContextHolder.CONTEXT.get())
+        return new ServletContextAwareProcessor(DynamicConstant.SERVLET_CONTEXT().get())
     }
 
     @Bean

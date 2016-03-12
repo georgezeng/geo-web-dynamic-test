@@ -4,7 +4,7 @@ import java.util
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.servlet.{ServletConfig, ServletContext}
 
-import com.geo.dynamic.spring.ServletContextHolder
+import com.geo.dynamic.spring.{DynamicConstant, ServletContextHolder}
 import com.geo.dynamic.spring.context.DynamicWebApplicationContext
 import com.geo.dynamic.{DynamicClassLoader, DynamicMappingLoader}
 import com.typesafe.config.Config
@@ -51,7 +51,7 @@ class DynamicController @Autowired()(config: Config) extends ApplicationContextA
   @RequestMapping(path = Array("/{entry}/**"))
   def execute(@PathVariable entry: String, request: HttpServletRequest, response: HttpServletResponse): Unit = {
     val originalClsLoader = Thread.currentThread().getContextClassLoader
-    ServletContextHolder.CONTEXT.set(request.getServletContext)
+    DynamicConstant.SERVLET_CONTEXT.set(request.getServletContext)
     val entryClsName = getEntryClsName(entry)
     try {
       if (entryClsName == null) {

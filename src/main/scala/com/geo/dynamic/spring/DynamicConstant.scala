@@ -1,6 +1,7 @@
 package com.geo.dynamic.spring
 
 import java.lang.annotation.Annotation
+import javax.servlet.ServletContext
 
 import org.springframework.beans.factory.annotation.Configurable
 import org.springframework.context.annotation.Configuration
@@ -22,4 +23,6 @@ object DynamicConstant {
     list.add(classOf[Configurable])
     list
   }
+
+  val SERVLET_CONTEXT = new ThreadLocal[ServletContext]
 }
