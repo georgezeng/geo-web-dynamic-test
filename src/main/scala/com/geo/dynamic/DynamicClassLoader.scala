@@ -11,7 +11,7 @@ import scala.collection.JavaConversions._
 
 class DynamicClassLoader(parent: ClassLoader) extends GroovyClassLoader(parent) with LazyLogging {
   protected override def isRecompilable(cls: Class[_]): Boolean = {
-    if (!Environment.isDevOrTest()) {
+    if (!Environment.isDev()) {
       return super.isRecompilable(cls)
     }
     if (cls == null) {
@@ -23,7 +23,7 @@ class DynamicClassLoader(parent: ClassLoader) extends GroovyClassLoader(parent) 
 
   protected override def loadClass(name: String, resolve: Boolean): Class[_] = {
     logger.trace("Loading class [" + name + "]")
-    loadClass(name, true, !Environment.isDevOrTest(), resolve)
+    loadClass(name, true, !Environment.isDev(), resolve)
   }
 
   override def getResource(name: String): URL = {

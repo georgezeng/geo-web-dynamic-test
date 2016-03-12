@@ -4,7 +4,7 @@ import java.util
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.servlet.{ServletConfig, ServletContext}
 
-import com.geo.dynamic.spring.{DynamicConstant, ServletContextHolder}
+import com.geo.dynamic.spring.DynamicConstant
 import com.geo.dynamic.spring.context.DynamicWebApplicationContext
 import com.geo.dynamic.{DynamicClassLoader, DynamicMappingLoader}
 import com.typesafe.config.Config
@@ -130,5 +130,5 @@ class DynamicServletConfig(name: String,
     initParameters.get(name)
   }
 
-  override def getServletContext: ServletContext = ServletContextHolder.CONTEXT.get()
+  override def getServletContext: ServletContext = DynamicConstant.SERVLET_CONTEXT.get()
 }

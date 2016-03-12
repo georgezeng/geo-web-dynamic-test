@@ -23,7 +23,7 @@ class StaticResourceFilter @Autowired()(config: Config) extends GenericFilterBea
     val httpReq = request.asInstanceOf[HttpServletRequest]
     def isMatch(): Boolean = {
       for (extension <- staticResourceExtensions) {
-        val matcher = new AntPathRequestMatcher("/**." + extension)
+        val matcher = new AntPathRequestMatcher("/**/*." + extension)
         if (matcher.matches(httpReq)) {
           return true
         }
