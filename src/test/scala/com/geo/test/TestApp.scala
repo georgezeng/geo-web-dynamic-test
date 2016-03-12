@@ -19,7 +19,6 @@ class TestConfig {
 
 
 object TestApp extends App {
-  System.setProperty("ENV_SYSTEM", "test")
   org.h2.tools.Server.main("-web")
   SpringApplication.run(classOf[TestConfig])
   while (true) {}
