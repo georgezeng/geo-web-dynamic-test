@@ -7,7 +7,9 @@ CREATE TABLE IF NOT EXISTS `RoleAuthority` (
   `createdBy` varchar(100) NOT NULL,
   `updatedBy` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_authority_name` (`name`)
+  KEY `idx_authority_name` (`name`),
+  KEY `idx_authority_createdBy` (`createdBy`),
+  KEY `idx_authority_updatedBy` (`updatedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -19,7 +21,9 @@ CREATE TABLE IF NOT EXISTS `Role` (
   `createdBy` varchar(100) NOT NULL,
   `updatedBy` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_role_name` (`name`)
+  KEY `idx_role_name` (`name`),
+  KEY `idx_role_createdBy` (`createdBy`),
+  KEY `idx_role_updatedBy` (`updatedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -39,7 +43,9 @@ CREATE TABLE IF NOT EXISTS `User` (
   `accountNonLocked` bit(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_user_username` (`username`),
-  KEY `idx_user_email` (`email`)
+  KEY `idx_user_email` (`email`),
+  KEY `idx_user_createdBy` (`createdBy`),
+  KEY `idx_user_updatedBy` (`updatedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
