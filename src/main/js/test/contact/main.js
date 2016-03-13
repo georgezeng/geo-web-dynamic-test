@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var ListView = require("./listview.src.js");
-var EditView = require("./editview.src.js");
+var ListView = require("./listview.js");
+var EditView = require("./editview.js");
 
 
 var Content = React.createClass({
