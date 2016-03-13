@@ -1,3 +1,8 @@
+var $ = require("jquery");
+var JSON = require("json3")
+var React = require('react');
+var ReactDOM = require('react-dom');
+
 var Content = React.createClass({
   getInitialState: function() {
     return { showEdit: false };
@@ -126,7 +131,7 @@ var OperationsTd = React.createClass({
   render: function() {
     return (
       <td>
-        <a href="javascript:;" onClick={this.handleEdit}>edit</a>&nbsp;&nbsp;&nbsp;
+        <a href="javascript:;" onClick={this.handleEdit} style={{marginRight: "20px"}} >edit</a>
         <a href="javascript:;" onClick={this.handleDelete}>delete</a>
       </td>
     );
