@@ -1,0 +1,1 @@
+browserify -t [ babelify --presets [ react ] ] src/main/webapp/js/$1/$2.js -o src/main/webapp/js/$1/$3.js
