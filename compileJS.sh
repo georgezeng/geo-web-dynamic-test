@@ -1,4 +1,15 @@
-mkdir src/main/webapp/js/$1
-browserify -t [ babelify --presets [ react ] ] src/$1/js/$2/main.js -o src/main/webapp/js/$1/$2-react.js
-browserify -g uglifyify src/main/webapp/js/$1/$2-react.js > src/main/webapp/js/$1/$2.min.js
-rm src/main/webapp/js/$1/$2-react.js
+if [ $# == 0 ]; then
+  echo "Usage: compileJS.sh fileName [test]"
+  exit
+fi
+if [ "$2" == "test" ] ; then
+    mkdir src/main/webapp/js/test
+    JS_ROOT="test"
+    JS_DIST_DIR="test/"
+else
+  JS_ROOT="main"
+  JS_DIST_DIR=""
+fi
+browserify -t [ babelify --presets [ react ] ] src/$JS_ROOT/js/$1/main.js -o src/main/webapp/js/$JS_DIST_DIR$1-react.js
+browserify -g uglifyify src/main/webapp/js/$JS_DIST_DIR$1-react.js > src/main/webapp/js/$JS_DIST_DIR$1.min.js
+rm src/main/webapp/js/$JS_DIST_DIR$1-react.js
