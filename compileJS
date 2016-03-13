@@ -1,5 +1,7 @@
+#!/usr/bin/env bash
+
 if [ $# == 0 ]; then
-  echo "Usage: compileJS.sh fileName [test]"
+  echo "Usage: compileJS fileName [test]"
   exit
 fi
 if [ "$2" == "test" ] ; then
