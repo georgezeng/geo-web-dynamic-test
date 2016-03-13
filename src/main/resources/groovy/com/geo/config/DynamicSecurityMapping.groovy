@@ -5,7 +5,9 @@ package groovy.com.geo.config
  */
 class DynamicSecurityMapping {
     public static final def map = [
-//            "/index.html": "permitAll",
+            "**/js/**": "permitAll",
+            "**/css/**": "permitAll",
+            "**/images/**": "permitAll",
             "/**": "hasRole('ROLE_SUPER_ADMIN')",
     ]
 }

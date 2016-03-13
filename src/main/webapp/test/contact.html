@@ -3,122 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>CRUD Contact Test</title>
-    <script src="../js/jquery-2.2.1.min.js"></script>
-    <script src="../js/json2.js"></script>
+    <script src="../js/lib/react/react.min.js"></script>
+    <script src="../js/lib/react/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+    <script src="../js/lib/jquery-2.2.1.min.js"></script>
+    <script src="../js/lib/json2.js"></script>
+    <script type="text/babel" src="../js/test/contact.js"></script>
 </head>
 <body>
+
 <h2>Contact List</h2>
-
-<div id="listView">
-    <div>
-        <button id="addBtn">Add</button>
-    </div>
-    <table style="border: 1px solid black;" cellspacing="1" cellpadding="5">
-        <thead>
-        <th>name</th>
-        <th>phone</th>
-        <th>operation</th>
-        </thead>
-        <tbody id="datatable">
-
-        </tbody>
-    </table>
-</div>
-
-<div id="editView" style="display: none;">
-    <div>
-        <button id="backBtn">Back</button>
-        <button id="saveBtn">Save</button>
-    </div>
-    <input type="hidden" id="contactId" />
-    <table>
-        <tr>
-            <td>name</td>
-            <td><input id="contactName" type="text"/></td>
-        </tr>
-        <tr>
-            <td>phone</td>
-            <td><input id="contactPhone" type="text"/></td>
-        </tr>
-    </table>
-</div>
-
+<div id="content"></div>
 
 </body>
 
 <script>
-    $(document).ready(function() {
-        $.ajax("/testContact/list", {
-            success: function(list) {
-                $("#datatable").children().remove();
-                if(list) {
-                    for(var i = 0; i < list.length; i++) {
-                        var data = list[i];
-                        var tr = $("<tr></tr>");
-                        tr.append("<td>" + data.name + "</td>");
-                        tr.append("<td>" + data.phone + "</td>");
-                        var edit = $("<a href='javascript:;'>edit</a>");
-                        var editTd = $("<td></td>");
-                        editTd.appendTo(tr);
-                        editTd.append(edit);
-                        $("#datatable").append(tr);
-                        edit.click(function(data) {
-                            return function() {
-                                $("#listView").hide();
-                                $("#editView").show();
-                                $("#contactId").val(data.id);
-                                $("#contactName").val(data.name);
-                                $("#contactPhone").val(data.phone);
-                            }
-                        }(data));
-                        var del = $("<a href='javascript:;'>delete</a>");
-                        var deleteTd = $("<td></td>");
-                        deleteTd.appendTo(tr);
-                        deleteTd.append(del);
-                        del.click(function(data) {
-                            return function() {
-                                $.ajax("/testContact/delete/" + data.id, {
-                                    method: "delete"
-                                }).done(function() {
-                                    reload();
-                                });
-                            }
-                        }(data));
-                    }
-                }
-            }
-        });
-
-        $("#addBtn").click(function() {
-            $("#listView").hide();
-            $("#editView").show();
-        });
-
-        $("#backBtn").click(function() {
-            reload();
-        });
-
-        $("#saveBtn").click(function() {
-            $.ajax("/testContact/save", {
-                contentType: "application/json",
-                method: "post",
-                dataType: "json",
-                data: JSON.stringify({
-                    id: $("#contactId").val(),
-                    name: $("#contactName").val(),
-                    phone: $("#contactPhone").val()
-                })
-            }).done(function(data) {
-                window.location.href = "/test/contact.html";
-            }).fail(function(err) {
-                alert(err.responseText);
-            });
-        });
-    });
-
-    function reload() {
-        window.location.href = "/test/contact.html";
-    }
 
 
 </script>
