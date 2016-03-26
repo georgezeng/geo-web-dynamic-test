@@ -12,6 +12,7 @@ else
   JS_ROOT="main"
   JS_DIST_DIR=""
 fi
-browserify -t [ babelify --presets [ react ] ] src/$JS_ROOT/js/$1/main.js -o src/main/webapp/js/$JS_DIST_DIR$1-react.js
-browserify -g uglifyify src/main/webapp/js/$JS_DIST_DIR$1-react.js > src/main/webapp/js/$JS_DIST_DIR$1.min.js
-rm src/main/webapp/js/$JS_DIST_DIR$1-react.js
+#browserify -t [ babelify --presets [ react ] ] src/$JS_ROOT/js/$1/index.js -o src/main/webapp/js/$JS_DIST_DIR$1-react.js
+#browserify -g uglifyify src/main/webapp/js/$JS_DIST_DIR$1-react.js > src/main/webapp/js/$JS_DIST_DIR$1.min.js
+#rm src/main/webapp/js/$JS_DIST_DIR$1-react.js
+webpack src/$JS_ROOT/js/$1/index.js src/main/webapp/js/$JS_DIST_DIR$1.min.js
